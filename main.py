@@ -37,11 +37,16 @@ def display_webcam():
 
 if __name__ == "__main__":
 
-	display_webcam()
-	# import argparse	
-	# parser = argparse.ArgumentParser(description='Analyze streaming video')
-	# parser.add_argument('url',help="url of stream")
-	# args = parser.parse_args()
+	import argparse	
+	parser = argparse.ArgumentParser(description='Analyze streaming video')
+	parser.add_argument('-stream','-s',help='url of stream',nargs=1)
+	parser.add_argument('-w', action='store_true',help='toggle to display webcam')
 
-	# display_stream(args.url)
+	args = parser.parse_args()
+	print(args)
+	
+	if args.w: 
+		display_webcam()
+	if args.stream:
+		display_stream(args.stream[0])
 	
