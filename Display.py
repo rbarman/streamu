@@ -27,12 +27,14 @@ def display_video(url):
 def get_video(url):
 	'''Get streaming url for a youtubedl supported video'''
 	ydl = youtube_dl.YoutubeDL({})
-	# TODO: add error catching
 	info_dict = ydl.extract_info(url, download=False)
-	req = info_dict.get('requested_formats')
-	# TODO: req[0] has a fps feature -> send to display_capture which currently assumes 30 fps
-	url = req[0].get('url')
-	return url
+	# youtube videos have different metadata
+	if info_dict.get('extractor') == 'youtube':
+		req = info_dict.get('requested_formats')
+		# req also has fps feature
+		return req[0].get('url')
+	else:
+		return info_dict.get('url')
 
 def display_webcam():
 	'''Display an opecv VideoCapture from webcam'''
@@ -43,6 +45,7 @@ def display_capture(cap):
 	'''Display an opencv VideoCapture with face detection'''
 	
 	face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+	# TODO: dynamically set frame rate
 	frame_time = int((1.0 / 30.0) * 1000.0)
 	
 	while True:
@@ -51,6 +54,7 @@ def display_capture(cap):
 			if ret:
 				'''detect face on frame
 					TODO: fix slow performance on live streaming video
+					TODO: optimize cascade parameters
 				'''
 				gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 				faces = face_cascade.detectMultiScale(gray, 1.3, 5)
