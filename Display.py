@@ -1,5 +1,6 @@
 import streamlink
 import cv2
+import youtube_dl
 
 '''Methods related to displaying video via opencv'''
 
@@ -17,6 +18,22 @@ def get_livestream(url, quality='best'):
 	else:
 		raise ValueError("No steams were available")
 
+def display_video(url):
+	'''Display an opecv VideoCapture from a youtubedl supported video'''
+	video = get_video(url)
+	cap = cv2.VideoCapture(video)
+	display_capture(cap)
+
+def get_video(url):
+	'''Get streaming url for a youtubedl supported video'''
+	ydl = youtube_dl.YoutubeDL({})
+	# TODO: add error catching
+	info_dict = ydl.extract_info(url, download=False)
+	req = info_dict.get('requested_formats')
+	# TODO: req[0] has a fps feature -> send to display_capture which currently assumes 30 fps
+	url = req[0].get('url')
+	return url
+
 def display_webcam():
 	'''Display an opecv VideoCapture from webcam'''
 	cap = cv2.VideoCapture(0)
@@ -33,7 +50,7 @@ def display_capture(cap):
 			ret, frame = cap.read()
 			if ret:
 				'''detect face on frame
-					TODO: fix slow performance on streaming video
+					TODO: fix slow performance on live streaming video
 				'''
 				gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 				faces = face_cascade.detectMultiScale(gray, 1.3, 5)
