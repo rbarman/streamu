@@ -3,14 +3,14 @@ import cv2
 
 '''Methods related to displaying video via opencv'''
 
-def display_stream(url):
-	'''Display an opencv VideoCapture from a streamlink supported stream'''
-	stream = get_stream(url)
+def display_livestream(url):
+	'''Display an opencv VideoCapture from a streamlink supported livestream'''
+	stream = get_livestream(url)
 	cap = cv2.VideoCapture(stream)
 	display_capture(cap)
 
-def get_stream(url, quality='best'):
-	'''Get streamlink supported stream from url'''
+def get_livestream(url, quality='best'):
+	'''Get streaming url for streamlink supported stream'''
 	streams = streamlink.streams(url)
 	if streams:
 		return streams[quality].to_url()
