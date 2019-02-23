@@ -8,8 +8,12 @@ def get_stream(url, quality='best'):
 	else:
 		raise ValueError("No steams were available")
 
-def display_stream(stream):
+def display_stream(url):
+	stream = get_stream(url)
 	cap = cv2.VideoCapture(stream)
+	display_capture(cap)
+
+def display_capture(cap):
 	frame_time = int((1.0 / 30.0) * 1000.0)
 
 	while True:
@@ -27,11 +31,17 @@ def display_stream(stream):
 	cv2.destroyAllWindows()
 	cap.release()
 
-if __name__ == "__main__":
-	import argparse
-	parser = argparse.ArgumentParser(description='Analyze streaming video')
-	parser.add_argument('url',help="url of stream")
-	args = parser.parse_args()
+def display_webcam():
+	cap = cv2.VideoCapture(0)
+	display_capture(cap)
 
-	stream = get_stream(args.url)
-	display_stream(stream)
+if __name__ == "__main__":
+
+	display_webcam()
+	# import argparse	
+	# parser = argparse.ArgumentParser(description='Analyze streaming video')
+	# parser.add_argument('url',help="url of stream")
+	# args = parser.parse_args()
+
+	# display_stream(args.url)
+	
